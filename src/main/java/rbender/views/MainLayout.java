@@ -2,6 +2,8 @@ package rbender.views;
 
 import java.util.Set;
 
+import rbender.components.ChapterDropdown;
+import rbender.components.ChapterDropdownItem;
 import rbender.components.DrawerHeader;
 import rbender.components.Video;
 
@@ -9,6 +11,7 @@ import com.webforj.component.Component;
 import com.webforj.component.Composite;
 import com.webforj.component.html.elements.Div;
 import com.webforj.component.html.elements.H1;
+import com.webforj.component.html.elements.Nav;
 import com.webforj.component.layout.applayout.AppDrawerToggle;
 import com.webforj.component.layout.applayout.AppLayout;
 import com.webforj.component.layout.toolbar.Toolbar;
@@ -47,6 +50,15 @@ public class MainLayout extends Composite<AppLayout> {
   }
 
   private void setDrawer() {
+    Nav chapters = new Nav();
+    chapters.add(
+      new ChapterDropdown("Chapter 0: Introduction").add(
+        new ChapterDropdownItem("What is WebforJ"),
+        new ChapterDropdownItem("What is a Frontend")
+      ),
+      new ChapterDropdown("Chapter 1: Setup")
+    );
+    self.addToDrawer(chapters);
     //self.addToDrawer(appNav);
   }
 
