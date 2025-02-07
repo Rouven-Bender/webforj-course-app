@@ -7,12 +7,10 @@ import rbender.components.Video;
 
 import com.webforj.component.Component;
 import com.webforj.component.Composite;
+import com.webforj.component.html.elements.Div;
 import com.webforj.component.html.elements.H1;
-import com.webforj.component.icons.TablerIcon;
 import com.webforj.component.layout.applayout.AppDrawerToggle;
 import com.webforj.component.layout.applayout.AppLayout;
-import com.webforj.component.layout.appnav.AppNav;
-import com.webforj.component.layout.appnav.AppNavItem;
 import com.webforj.component.layout.toolbar.Toolbar;
 import com.webforj.router.Router;
 import com.webforj.router.annotation.FrameTitle;
@@ -40,16 +38,16 @@ public class MainLayout extends Composite<AppLayout> {
     toolbar.addToTitle(title);
 
     self.addToHeader(toolbar);
-    self.addToContent(new Video("https://www.w3schools.com/html/mov_bbb.mp4"));
+    Div container = new Div();
+    container.addClassName("container");
+    Video vidPlayer = new Video("");
+    vidPlayer.addClassName("VideoPlayer");
+    container.add(vidPlayer);
+    self.addToContent(container);
   }
 
   private void setDrawer() {
-
-    AppNav appNav = new AppNav();
-    appNav.addItem(new AppNavItem("Inbox", InboxView.class, TablerIcon.create("inbox")));
-    appNav.addItem(new AppNavItem("Archived", ArchivedView.class, TablerIcon.create("archive")));
-
-    self.addToDrawer(appNav);
+    //self.addToDrawer(appNav);
   }
 
   private void onNavigate(NavigateEvent ev) {
