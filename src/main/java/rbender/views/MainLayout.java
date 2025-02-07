@@ -3,6 +3,7 @@ package rbender.views;
 import java.util.Set;
 
 import rbender.components.DrawerHeader;
+import rbender.components.Video;
 
 import com.webforj.component.Component;
 import com.webforj.component.Composite;
@@ -39,6 +40,7 @@ public class MainLayout extends Composite<AppLayout> {
     toolbar.addToTitle(title);
 
     self.addToHeader(toolbar);
+    self.addToContent(new Video("https://www.w3schools.com/html/mov_bbb.mp4"));
   }
 
   private void setDrawer() {
