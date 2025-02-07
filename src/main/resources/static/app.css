@@ -9,6 +9,17 @@ dwc-app-layout {
   --dwc-app-layout-header-height: 60px;
   --dwc-app-layout-drawer-width: 20em;
 }
+.chapter-fold-btn{
+  border: 0px none transparent;
+  outline: 0px none transparent;
+}
+.chapter-fold-btn::part(control) {
+  color: gray;
+  background-color: var(--dwc-surface-3);
+  box-sizing: unset;
+  border: 0px none transparent;
+  outline: 0px none transparent;
+}
 
 .container {
   display: grid; 
