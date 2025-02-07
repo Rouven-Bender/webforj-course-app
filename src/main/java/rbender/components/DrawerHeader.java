@@ -13,11 +13,11 @@ public class DrawerHeader extends Composite<FlexLayout> {
     self.setDirection(FlexDirection.COLUMN);
     self.setSpacing("0px");
 
-    H1 title = new H1("Mailbox");
+    H1 title = new H1("Course Plattform");
     title.setStyle("margin-bottom", "0");
     self.add(title);
 
-    Paragraph email = new Paragraph("john@mailbox.com");
+    Paragraph email = new Paragraph("#builtwithwebforj");
     email.setStyle("color", "#86888f");
     email.setStyle("font-size", ".7em");
     self.add(email);
