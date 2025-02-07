@@ -23,5 +23,11 @@ public class Video extends Composite<Div>{
         self.add(
             vid
         );
+
+    }
+
+    public Video addClassName(String... classNames){
+        self.addClassName(classNames);
+        return this;
     }
 }
