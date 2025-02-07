@@ -10,3 +10,29 @@ dwc-app-layout {
   --dwc-app-layout-drawer-width: 20em;
 }
 
+.container {
+  display: grid; 
+  grid-template-columns: 1fr 1fr 1fr 1fr; 
+  height: 100%;
+  grid-template-rows: 1fr 1fr 1fr; 
+  gap: 10px 6px; 
+  grid-template-areas: 
+    "VideoPlayer VideoPlayer VideoPlayer Notes"
+    "VideoPlayer VideoPlayer VideoPlayer Notes"
+    "Transcript Transcript Transcript Notes"; 
+}
+.VideoPlayer { 
+  grid-area: VideoPlayer;
+}
+.Notes { grid-area: Notes; }
+.Transcript { grid-area: Transcript; }
+@supports (width: -webkit-fill-available) {
+  .VideoPlayerBox {
+    width: -webkit-fill-available;
+  }
+}
+@supports (width: -moz-available) {
+  .VideoPlayerBox {
+    width: -moz-available;
+  }
+}

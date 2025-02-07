@@ -14,6 +14,7 @@ public class Video extends Composite<Div>{
 
         Element vid = new Element("video");
         vid.setAttribute("controls", "");
+        vid.addClassName("VideoPlayerBox");
 
         for (String s : srcs) {
             Element source = new Element("source");
