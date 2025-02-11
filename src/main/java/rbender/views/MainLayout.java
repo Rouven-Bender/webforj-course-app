@@ -20,7 +20,7 @@ import com.webforj.router.annotation.FrameTitle;
 import com.webforj.router.annotation.Route;
 import com.webforj.router.event.NavigateEvent;
 
-@Route("/")
+@Route("/:chapter/:lesson")
 public class MainLayout extends Composite<AppLayout> {
   private AppLayout self = getBoundComponent();
   private H1 title = new H1();
@@ -53,8 +53,8 @@ public class MainLayout extends Composite<AppLayout> {
     Nav chapters = new Nav();
     chapters.add(
       new ChapterDropdown("Chapter 0: Introduction").add(
-        new ChapterDropdownItem("What is WebforJ"),
-        new ChapterDropdownItem("What is a Frontend")
+        new ChapterDropdownItem("What is WebforJ", "chapter-0/lesson-1"),
+        new ChapterDropdownItem("What is a Frontend", "chapter-0/lesson-2")
       ),
       new ChapterDropdown("Chapter 1: Setup")
     );
