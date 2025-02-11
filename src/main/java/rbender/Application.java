@@ -9,8 +9,8 @@ import com.webforj.annotation.StyleSheet;
 
 @Routify(packages = "rbender.views")
 @StyleSheet("ws://app.css")
-@AppTitle("My App")
+@AppTitle("Course Plattform")
 @AppTheme("system")
-@AppProfile(name = "My App", shortName = "My App")
+@AppProfile(name = "Course Plattform", shortName = "Course Plattform")
 public class Application extends App {
 }
