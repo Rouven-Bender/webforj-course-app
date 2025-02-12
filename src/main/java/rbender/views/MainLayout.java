@@ -6,6 +6,9 @@ import rbender.components.ChapterDropdown;
 import rbender.components.ChapterDropdownItem;
 import rbender.components.DrawerHeader;
 import rbender.components.Video;
+import rbender.controllers.CourseDataProvider;
+import rbender.types.Chapter;
+import rbender.types.Lesson;
 
 import com.webforj.component.Component;
 import com.webforj.component.Composite;
@@ -18,10 +21,14 @@ import com.webforj.component.layout.toolbar.Toolbar;
 import com.webforj.router.Router;
 import com.webforj.router.annotation.FrameTitle;
 import com.webforj.router.annotation.Route;
+import com.webforj.router.event.DidEnterEvent;
 import com.webforj.router.event.NavigateEvent;
+import com.webforj.router.history.ParametersBag;
+import com.webforj.router.observer.DidEnterObserver;
 
 @Route("/:chapter/:lesson")
-public class MainLayout extends Composite<AppLayout> {
+public class MainLayout extends Composite<AppLayout> implements DidEnterObserver {
+  private CourseDataProvider courseDataProvider = CourseDataProvider.getInstance();
   private AppLayout self = getBoundComponent();
   private H1 title = new H1();
 
@@ -51,15 +58,15 @@ public class MainLayout extends Composite<AppLayout> {
 
   private void setDrawer() {
     Nav chapters = new Nav();
-    chapters.add(
-      new ChapterDropdown("Chapter 0: Introduction").add(
-        new ChapterDropdownItem("What is WebforJ", "chapter-0/lesson-1"),
-        new ChapterDropdownItem("What is a Frontend", "chapter-0/lesson-2")
-      ),
-      new ChapterDropdown("Chapter 1: Setup")
-    );
+    for (Chapter c : courseDataProvider.getChapters()) {
+      ChapterDropdown d = new ChapterDropdown(c);
+      for (Lesson l : c.lessons) {
+        String link = c.urlprefix.replace("/", "") + "/" + l.url.replace("/", "");
+        d.add(new ChapterDropdownItem(l.name, link));
+      }
+      chapters.add(d);
+    }
     self.addToDrawer(chapters);
-    //self.addToDrawer(appNav);
   }
 
   private void onNavigate(NavigateEvent ev) {
@@ -71,5 +78,11 @@ public class MainLayout extends Composite<AppLayout> {
       FrameTitle frameTitle = view.getClass().getAnnotation(FrameTitle.class);
       title.setText(frameTitle != null ? frameTitle.value() : "");
     }
+  }
+
+  @Override
+  public void onDidEnter(DidEnterEvent event, ParametersBag params) {
+    String chapter = params.getAlpha("chapter").orElse("");
+    String lesson = params.getAlpha("lesson").orElse("");
   }
 }

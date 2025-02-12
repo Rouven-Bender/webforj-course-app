@@ -1,5 +1,8 @@
 package rbender;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 import com.webforj.App;
 import com.webforj.annotation.AppProfile;
 import com.webforj.annotation.AppTheme;
@@ -13,4 +16,14 @@ import com.webforj.annotation.StyleSheet;
 @AppTheme("system")
 @AppProfile(name = "Course Plattform", shortName = "Course Plattform")
 public class Application extends App {
+    private static ClassLoader classLoader = Application.class.getClassLoader();
+    
+    public static byte[] getResourceFileAsByteArray(String filename) throws IOException{
+        return classLoader.getResourceAsStream(filename).readAllBytes();
+    }
+
+    public static String getResourceAsString(String filename) throws IOException {
+        byte[] data = getResourceFileAsByteArray(filename);
+        return new String(data, StandardCharsets.UTF_8);
+    }
 }

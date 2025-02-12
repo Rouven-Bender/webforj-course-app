@@ -1,0 +1,25 @@
+{
+    "chapters": [
+        {
+            "name": "Chapter 0: Introduction",
+            "urlprefix": "chapter-0",
+            "lessons": [
+                {
+                    "name": "What is WebforJ",
+                    "video": "",
+                    "url": "what-is-webforj"
+                },
+                {
+                    "name": "What is a Frontend",
+                    "video": "",
+                    "url": "what-is-a-frontend"
+                }
+            ]
+        },
+        {
+            "name": "Chapter 1: Setup",
+            "urlprefix": "chapter-1",
+            "lessons": [ ]
+        }
+    ]
+}

@@ -8,12 +8,14 @@ import com.webforj.component.html.elements.Paragraph;
 import com.webforj.component.html.elements.UnorderedList;
 import com.webforj.component.icons.FeatherIcon;
 
+import rbender.types.Chapter;
+
 public class ChapterDropdown extends Composite<UnorderedList>{
     private UnorderedList self = getBoundComponent();
     private Button fold;
     private boolean folded = false;
 
-    public ChapterDropdown(String title){
+    public ChapterDropdown(Chapter c){
         self.setStyle("padding-left", "20px");
         self.setStyle("margin-top", "7px");
         self.setStyle("margin-bottom", "7px");
@@ -21,7 +23,7 @@ public class ChapterDropdown extends Composite<UnorderedList>{
         Div header = new Div();
         header.setStyle("display", "flex");
 
-        Paragraph text = new Paragraph(title);
+        Paragraph text = new Paragraph(c.name);
 
         fold = new Button();
         fold.setIcon(FeatherIcon.CHEVRON_DOWN.create());
