@@ -1,7 +1,5 @@
 package rbender.views;
 
-import java.util.*;
-
 import rbender.components.ChapterDropdown;
 import rbender.components.ChapterDropdownItem;
 import rbender.components.DrawerHeader;
@@ -15,9 +13,7 @@ import com.webforj.component.html.elements.Nav;
 import com.webforj.component.layout.applayout.AppDrawerToggle;
 import com.webforj.component.layout.applayout.AppLayout;
 import com.webforj.component.layout.toolbar.Toolbar;
-import com.webforj.router.Router;
 import com.webforj.router.annotation.Route;
-import com.webforj.router.event.NavigateEvent;
 
 @Route("/")
 public class MainLayout extends Composite<AppLayout> {
@@ -28,7 +24,6 @@ public class MainLayout extends Composite<AppLayout> {
   public MainLayout() {
     setHeader();
     setDrawer();
-    Router.getCurrent().onNavigate(this::onNavigate);
   }
 
   private void setHeader() {
@@ -54,16 +49,4 @@ public class MainLayout extends Composite<AppLayout> {
     }
     self.addToDrawer(chapters);
   }
-
-  private void onNavigate(NavigateEvent ev) {
-    //Set<Component> components = ev.getContext().getAllComponents();
-    //Component view = components.stream().filter(c -> c.getClass().getSimpleName().endsWith("View")).findFirst()
-        //.orElse(null);
-
-    //if (view != null) {
-      //FrameTitle frameTitle = view.getClass().getAnnotation(FrameTitle.class);
-      //title.setText(frameTitle != null ? frameTitle.value() : "");
-    //}
-  }
-
 }
