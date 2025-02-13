@@ -23,7 +23,7 @@ public class CourseDataProvider {
 
             for (Chapter c : courseData.chapters) {
                 for (Lesson l : c.lessons) {
-                    String link = c.urlprefix.replace("/", "") +"/"+ l.url.replace("/", "");
+                    String link = "/" + c.urlprefix.replace("/", "") +"/"+ l.url.replace("/", "");
                     videolinks.put(link, l.video);
                 }
             }
@@ -34,6 +34,14 @@ public class CourseDataProvider {
 
     public Chapter[] getChapters(){
         return courseData.chapters.clone();
+    }
+
+    public boolean isLessonLink(String link){
+        return videolinks.containsKey(link);
+    }
+    
+    public String getVideoLink(String lessonLink){
+        return videolinks.get(lessonLink);
     }
 
     public static synchronized CourseDataProvider getInstance(){

@@ -3,7 +3,9 @@ package rbender.components;
 import com.webforj.component.Composite;
 import com.webforj.component.element.event.ElementClickEvent;
 import com.webforj.component.html.elements.ListEntry;
+import com.webforj.router.NavigationOptions;
 import com.webforj.router.Router;
+import com.webforj.router.NavigationOptions.NavigationType;
 import com.webforj.router.history.Location;
 
 public class ChapterDropdownItem extends Composite<ListEntry>{
@@ -26,6 +28,9 @@ public class ChapterDropdownItem extends Composite<ListEntry>{
 
     public void chapterSelected(ElementClickEvent<ListEntry> event) {
         event.getComponent();
-        Router.getCurrent().navigate(new Location(link));
+        NavigationOptions options = new NavigationOptions();
+        options.setNavigationType(NavigationType.PUSH);
+        options.setInvokeObservers(true);
+        Router.getCurrent().navigate(new Location(link), options);
     }
 }
