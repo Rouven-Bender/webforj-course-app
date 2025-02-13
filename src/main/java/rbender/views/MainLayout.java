@@ -8,7 +8,6 @@ import rbender.types.Chapter;
 import rbender.types.Lesson;
 
 import com.webforj.component.Composite;
-import com.webforj.component.html.elements.H1;
 import com.webforj.component.html.elements.Nav;
 import com.webforj.component.layout.applayout.AppDrawerToggle;
 import com.webforj.component.layout.applayout.AppLayout;
@@ -19,7 +18,6 @@ import com.webforj.router.annotation.Route;
 public class MainLayout extends Composite<AppLayout> {
   private CourseDataProvider courseDataProvider = CourseDataProvider.getInstance();
   private AppLayout self = getBoundComponent();
-  private H1 title = new H1();
 
   public MainLayout() {
     setHeader();
@@ -33,7 +31,6 @@ public class MainLayout extends Composite<AppLayout> {
 
     Toolbar toolbar = new Toolbar();
     toolbar.addToStart(new AppDrawerToggle());
-    toolbar.addToTitle(title);
     self.addToHeader(toolbar);
   }
 
