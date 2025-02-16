@@ -22,28 +22,20 @@ dwc-app-layout {
 }
 
 .container {
-  display: grid; 
-  grid-template-columns: 1fr 1fr 1fr 1fr; 
-  height: 100%;
-  grid-template-rows: 1fr 1fr 1fr; 
-  gap: 10px 6px; 
-  grid-template-areas: 
-    "VideoPlayer VideoPlayer VideoPlayer Notes"
-    "VideoPlayer VideoPlayer VideoPlayer Notes"
-    "Transcript Transcript Transcript Notes"; 
-}
-.VideoPlayer { 
-  grid-area: VideoPlayer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 .Notes { grid-area: Notes; }
 .Transcript { grid-area: Transcript; }
+
 @supports (width: -webkit-fill-available) {
-  .VideoPlayerBox {
+  .fill-available{
     width: -webkit-fill-available;
   }
 }
 @supports (width: -moz-available) {
-  .VideoPlayerBox {
+  .fill-available{
     width: -moz-available;
   }
 }

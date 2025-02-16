@@ -20,10 +20,13 @@ public class Video extends Composite<Div>{
         }
         String videoName = UUID.randomUUID().toString();
 
+        self.addClassName("VideoPlayer");
+
         vid = new Element("video");
         vid.setAttribute("controls", "");
         vid.setAttribute("name", videoName);
-        vid.addClassName("VideoPlayerBox");
+        vid.setMaxWidth("640px");
+        vid.setMaxHeight("480px");
 
         for (String s : srcs) {
             Element source = new Element("source");
@@ -55,5 +58,9 @@ public class Video extends Composite<Div>{
     public Video addClassName(String... classNames){
         self.addClassName(classNames);
         return this;
+    }
+
+    public void setVisible(boolean visible){
+        self.setVisible(visible);
     }
 }

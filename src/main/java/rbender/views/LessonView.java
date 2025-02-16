@@ -1,6 +1,9 @@
 package rbender.views;
 
+import java.io.IOException;
+
 import com.webforj.component.Composite;
+import com.webforj.component.field.TextArea;
 import com.webforj.component.html.elements.Div;
 import com.webforj.component.html.elements.H1;
 import com.webforj.component.html.elements.Paragraph;
@@ -13,6 +16,8 @@ import com.webforj.router.event.NavigateEvent;
 import com.webforj.router.history.ParametersBag;
 import com.webforj.router.observer.DidEnterObserver;
 
+import rbender.Application;
+import rbender.components.Transcript;
 import rbender.components.Video;
 import rbender.controllers.CourseDataProvider;
 
@@ -20,23 +25,38 @@ import rbender.controllers.CourseDataProvider;
 public class LessonView extends Composite<FlexLayout> implements DidEnterObserver{
     private FlexLayout self = getBoundComponent();
     private CourseDataProvider courseDataProvider = CourseDataProvider.getInstance();
+    private Div outerContainer = new Div();
+    private Div videoTranscriptContainer = new Div();
 
     private FlexLayout fourOfourContainer;
-    private Div videocontainer;
 
     private Video vidPlayer;
+    private Transcript transcript;
 
     public LessonView(){
+        self.add(outerContainer);
+        self.setStyle("height", "100%");
+        outerContainer.add(videoTranscriptContainer);
+        outerContainer.setStyle("display", "flex");
+        outerContainer.setStyle("flex-direction", "row");
+        outerContainer.addClassName("fill-available");
+        outerContainer.setStyle("height", "100%");
+        outerContainer.setStyle("gap", "5px");
+
         Router.getCurrent().onNavigate(this::onNavigate);
     }
 
-    private void createVideoplayer(String videolink){
-        videocontainer = new Div();
-        videocontainer.addClassName("container");
+    private void createVideoplayer(String lessonLink){
+        String videolink = courseDataProvider.getVideoLink(lessonLink);
+        videoTranscriptContainer.addClassName("container");
         vidPlayer = new Video(videolink);
-        vidPlayer.addClassName("VideoPlayer");
-        videocontainer.add(vidPlayer);
-        self.add(videocontainer);
+        videoTranscriptContainer.add(vidPlayer);
+        try {
+            String markdown = Application.getResourceAsString(courseDataProvider.getTranscript(lessonLink));
+            transcript = new Transcript(markdown);
+        } catch (IOException e) {}
+        videoTranscriptContainer.add(transcript);
+        outerContainer.add(new TextArea().addClassName("fill-available")); //notes box
     }
     
     private void create404Message(){
@@ -54,7 +74,7 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
         text.setStyle("margin", "auto");
 
         fourOfourContainer.add(fourOfour,text);
-        self.add(fourOfourContainer);
+        outerContainer.add(fourOfourContainer);
     }
 
     @Override
@@ -65,7 +85,7 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
         if (!chapter.equals("") && !lesson.equals("")){
             String link = "/" + chapter + "/" + lesson;
             if (courseDataProvider.isLessonLink(link)) {
-                createVideoplayer(courseDataProvider.getVideoLink(link));
+                createVideoplayer(link);
             } else { create404Message(); }
         } else { create404Message(); }
     }
@@ -74,20 +94,20 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
         String link = ev.getLocation().getFullURI();
         if (resolvesToThisView(link)){
             if (courseDataProvider.isLessonLink(link)){
-                if(videocontainer != null){
+                if(vidPlayer != null){
                     if (fourOfourContainer != null){ fourOfourContainer.setVisible(false);}
                     vidPlayer.resetWithNewSource(courseDataProvider.getVideoLink(link));
-                    videocontainer.setVisible(true);
+                    vidPlayer.setVisible(true);
                 } else {
                     if (fourOfourContainer != null){ fourOfourContainer.setVisible(false);}
-                    createVideoplayer(courseDataProvider.getVideoLink(link));
+                    createVideoplayer(link);
                 }
             } else {
                 if (fourOfourContainer != null){
-                    if (videocontainer != null){ vidPlayer.pause(); videocontainer.setVisible(false); }
+                    if (vidPlayer != null){ vidPlayer.pause(); vidPlayer.setVisible(false); }
                     fourOfourContainer.setVisible(true);
                 } else {
-                    if (videocontainer != null){ vidPlayer.pause(); videocontainer.setVisible(false); }
+                    if (vidPlayer != null){ vidPlayer.pause(); vidPlayer.setVisible(false); }
                     create404Message();
                     fourOfourContainer.setVisible(true);
                 }

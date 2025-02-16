@@ -7,11 +7,13 @@
                 {
                     "name": "What is WebforJ",
                     "video": "",
+                    "transcript": "courseData/what-is-webforj.md",
                     "url": "what-is-webforj"
                 },
                 {
                     "name": "What is a Frontend",
                     "video": "",
+                    "transcript": "",
                     "url": "what-is-a-frontend"
                 }
             ]

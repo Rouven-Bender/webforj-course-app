@@ -19,10 +19,16 @@ public class Application extends App {
     private static ClassLoader classLoader = Application.class.getClassLoader();
     
     public static byte[] getResourceFileAsByteArray(String filename) throws IOException{
+        if (filename.equals("")){
+            return new byte[]{};
+        }
         return classLoader.getResourceAsStream(filename).readAllBytes();
     }
 
-    public static String getResourceAsString(String filename) throws IOException {
+    public static String getResourceAsString(String filename) throws IOException{
+        if (filename.equals("")){
+            return "";
+        }
         byte[] data = getResourceFileAsByteArray(filename);
         return new String(data, StandardCharsets.UTF_8);
     }

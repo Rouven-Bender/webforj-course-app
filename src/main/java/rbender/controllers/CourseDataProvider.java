@@ -12,20 +12,23 @@ import rbender.types.Lesson;
 
 public class CourseDataProvider {
     private static CourseDataProvider instance = null;
-    private HashMap<String, String> videolinks = new HashMap<>();
+    private HashMap<String, Data> dataStorage = new HashMap<>();
     private CourseData courseData;
 
     private CourseDataProvider(){
         try {
-            String content = Application.getResourceAsString("static/courseData.json");
-            Gson gson = new Gson();
-            courseData = gson.fromJson(content, CourseData.class);
+        String content = Application.getResourceAsString("static/courseData.json");
+        Gson gson = new Gson();
+        courseData = gson.fromJson(content, CourseData.class);
 
-            for (Chapter c : courseData.chapters) {
-                for (Lesson l : c.lessons) {
-                    String link = "/" + c.urlprefix.replace("/", "") +"/"+ l.url.replace("/", "");
-                    videolinks.put(link, l.video);
-                }
+        for (Chapter c : courseData.chapters) {
+            for (Lesson l : c.lessons) {
+                String link = "/" + c.urlprefix.replace("/", "") +"/"+ l.url.replace("/", "");
+                Data d = new Data();
+                d.videolink = l.video;
+                d.transcriptFilename = l.transcript;
+                dataStorage.put(link, d);
+            }
             }
         } catch (IOException e) {
             //TODO: Logging
@@ -37,11 +40,25 @@ public class CourseDataProvider {
     }
 
     public boolean isLessonLink(String link){
-        return videolinks.containsKey(link);
+        return dataStorage.containsKey(link);
     }
     
     public String getVideoLink(String lessonLink){
-        return videolinks.get(lessonLink);
+        Data value = dataStorage.get(lessonLink);
+        if (value != null){
+            return value.videolink;
+        } else {
+            return "";
+        }
+    }
+    
+    public String getTranscript(String lessonLink){
+        Data value = dataStorage.get(lessonLink);
+        if (value != null){
+            return value.transcriptFilename;
+        } else {
+            return "";
+        }
     }
 
     public static synchronized CourseDataProvider getInstance(){
@@ -50,5 +67,9 @@ public class CourseDataProvider {
         }
         return instance;
     }
+}
 
+class Data {
+    public String videolink;
+    public String transcriptFilename;
 }
