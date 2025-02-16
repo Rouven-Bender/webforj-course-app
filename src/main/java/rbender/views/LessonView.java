@@ -98,6 +98,10 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
                     if (fourOfourContainer != null){ fourOfourContainer.setVisible(false);}
                     vidPlayer.resetWithNewSource(courseDataProvider.getVideoLink(link));
                     vidPlayer.setVisible(true);
+                    try {
+                        transcript.setText(Application.getResourceAsString(courseDataProvider.getTranscript(link)));
+                        transcript.setVisible(true);
+                    } catch (IOException e) { }
                 } else {
                     if (fourOfourContainer != null){ fourOfourContainer.setVisible(false);}
                     createVideoplayer(link);
@@ -105,9 +109,11 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
             } else {
                 if (fourOfourContainer != null){
                     if (vidPlayer != null){ vidPlayer.pause(); vidPlayer.setVisible(false); }
+                    if (transcript != null) { transcript.setVisible(false); }
                     fourOfourContainer.setVisible(true);
                 } else {
                     if (vidPlayer != null){ vidPlayer.pause(); vidPlayer.setVisible(false); }
+                    if (transcript != null) { transcript.setVisible(false); }
                     create404Message();
                     fourOfourContainer.setVisible(true);
                 }
