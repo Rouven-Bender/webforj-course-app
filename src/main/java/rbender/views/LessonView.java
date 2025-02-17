@@ -3,7 +3,6 @@ package rbender.views;
 import java.io.IOException;
 
 import com.webforj.component.Composite;
-import com.webforj.component.field.TextArea;
 import com.webforj.component.html.elements.Div;
 import com.webforj.component.html.elements.H1;
 import com.webforj.component.html.elements.Paragraph;
@@ -17,6 +16,7 @@ import com.webforj.router.history.ParametersBag;
 import com.webforj.router.observer.DidEnterObserver;
 
 import rbender.Application;
+import rbender.components.NoteBox;
 import rbender.components.Transcript;
 import rbender.components.Video;
 import rbender.controllers.CourseDataProvider;
@@ -56,7 +56,7 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
             transcript = new Transcript(markdown);
         } catch (IOException e) {}
         videoTranscriptContainer.add(transcript);
-        outerContainer.add(new TextArea().addClassName("fill-available")); //notes box
+        outerContainer.add(new NoteBox());
     }
     
     private void create404Message(){
