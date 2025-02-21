@@ -84,7 +84,21 @@
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
+    <dependency>
+        <groupId>org.xerial</groupId>
+        <artifactId>sqlite-jdbc</artifactId>
+        <version>3.49.0.0</version>
+    </dependency>
     
+    <!-- https://mvnrepository.com/artifact/com.password4j/password4j -->
+    <dependency>
+        <groupId>com.password4j</groupId>
+        <artifactId>password4j</artifactId>
+        <version>1.8.2</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
     <dependency>
         <groupId>com.google.code.gson</groupId>
