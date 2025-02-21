@@ -1,0 +1,33 @@
+{
+    "courses": [
+        {
+            "name": "WebforJ",
+            "url": "webforj",
+            "chapters": [
+                {
+                    "name": "Chapter 0: Introduction",
+                    "url": "chapter-0",
+                    "lessons": [
+                        {
+                            "name": "What is WebforJ",
+                            "video": "",
+                            "transcript": "courseData/what-is-webforj.md",
+                            "url": "what-is-webforj"
+                        },
+                        {
+                            "name": "What is a Frontend",
+                            "video": "",
+                            "transcript": "",
+                            "url": "what-is-a-frontend"
+                        }
+                    ]
+                },
+                {
+                    "name": "Chapter 1: Setup",
+                    "url": "chapter-1",
+                    "lessons": []
+                }
+            ]
+        }
+    ]
+}

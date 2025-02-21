@@ -2,60 +2,78 @@ package rbender.controllers;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import com.google.gson.Gson;
 
 import rbender.Application;
-import rbender.types.Chapter;
-import rbender.types.CourseData;
-import rbender.types.Lesson;
+import rbender.types.*;
 
 public class CourseDataProvider {
     private static CourseDataProvider instance = null;
-    private HashMap<String, Data> dataStorage = new HashMap<>();
-    private CourseData courseData;
+    private Map<String, Lesson> LessonLookupByLink = new HashMap<String, Lesson>();
+    private Map<String, Course> courseLookupByLink = new HashMap<String, Course>();
 
     private CourseDataProvider(){
         try {
-        String content = Application.getResourceAsString("static/courseData.json");
+        String content = Application.getResourceAsString("courseData/courses.json");
         Gson gson = new Gson();
-        courseData = gson.fromJson(content, CourseData.class);
+        Course[] courses = gson.fromJson(content, StorageFile.class).courses;
 
-        for (Chapter c : courseData.chapters) {
-            for (Lesson l : c.lessons) {
-                String link = "/" + c.urlprefix.replace("/", "") +"/"+ l.url.replace("/", "");
-                Data d = new Data();
-                d.videolink = l.video;
-                d.transcriptFilename = l.transcript;
-                dataStorage.put(link, d);
+        for (Course c : courses) {
+            courseLookupByLink.put(c.url, c);
+            for (Chapter ch : c.chapters) {
+                for (Lesson l : ch.lessons) {
+                    String link = 
+                        "/" + c.url.replace("/", "") +
+                        "/" + ch.url.replace("/", "") +
+                        "/"+ l.url.replace("/", "");
+                    LessonLookupByLink.put(link, l);
+                }
             }
-            }
+        }
         } catch (IOException e) {
             //TODO: Logging
         }
     }
 
-    public Chapter[] getChapters(){
-        return courseData.chapters.clone();
+    public Optional<Chapter[]> getChapters(String course){
+        Optional<Course> c = Optional.ofNullable(courseLookupByLink.get(course));
+        if (c.isPresent()){
+            return Optional.of(c.get().chapters);
+        } else {
+            return Optional.empty();
+        }
     }
 
     public boolean isLessonLink(String link){
-        return dataStorage.containsKey(link);
+        return LessonLookupByLink.containsKey(link);
     }
     
+    /**
+     * returns the link to the video of the lesson
+     * @param lessonLink
+     * @return
+     */
     public String getVideoLink(String lessonLink){
-        Data value = dataStorage.get(lessonLink);
+        Lesson value = LessonLookupByLink.get(lessonLink);
         if (value != null){
-            return value.videolink;
+            return value.video;
         } else {
             return "";
         }
     }
     
+    /**
+     * returns the path of the transcript file
+     * @param lessonLink
+     * @return
+     */
     public String getTranscript(String lessonLink){
-        Data value = dataStorage.get(lessonLink);
+        Lesson value = LessonLookupByLink.get(lessonLink);
         if (value != null){
-            return value.transcriptFilename;
+            return value.transcript;
         } else {
             return "";
         }
@@ -69,7 +87,6 @@ public class CourseDataProvider {
     }
 }
 
-class Data {
-    public String videolink;
-    public String transcriptFilename;
+class StorageFile{
+    public Course[] courses;
 }

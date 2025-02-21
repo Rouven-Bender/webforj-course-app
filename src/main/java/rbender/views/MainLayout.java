@@ -36,10 +36,14 @@ public class MainLayout extends Composite<AppLayout> {
 
   private void setDrawer() {
     Nav chapters = new Nav();
-    for (Chapter c : courseDataProvider.getChapters()) {
+    for (Chapter c : courseDataProvider.getChapters("webforj").get()) { //TODO: get which courses user has load chapters for those courses and render those
       ChapterDropdown d = new ChapterDropdown(c);
       for (Lesson l : c.lessons) {
-        String link = "/" + c.urlprefix.replace("/", "") + "/" + l.url.replace("/", "");
+        //String link = "/" + c.url.replace("/", "") + "/" + l.url.replace("/", "");
+        String link = 
+            "/" + "webforj" + //TODO: Change this once we are loading the users courses
+            "/" + c.url.replace("/", "") +
+            "/"+ l.url.replace("/", "");
         d.add(new ChapterDropdownItem(l.name, link));
       }
       chapters.add(d);

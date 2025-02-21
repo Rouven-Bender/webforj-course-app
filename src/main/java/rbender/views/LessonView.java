@@ -21,7 +21,7 @@ import rbender.components.Transcript;
 import rbender.components.Video;
 import rbender.controllers.CourseDataProvider;
 
-@Route(value = "/:chapter/:lesson", outlet = MainLayout.class)
+@Route(value = "/:course/:chapter/:lesson", outlet = MainLayout.class)
 public class LessonView extends Composite<FlexLayout> implements DidEnterObserver{
     private FlexLayout self = getBoundComponent();
     private CourseDataProvider courseDataProvider = CourseDataProvider.getInstance();
@@ -79,11 +79,15 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
 
     @Override
     public void onDidEnter(DidEnterEvent event, ParametersBag params) {
+        String course = params.get("course").orElse("");
         String chapter = params.get("chapter").orElse("");
         String lesson = params.get("lesson").orElse("");
 
-        if (!chapter.equals("") && !lesson.equals("")){
-            String link = "/" + chapter + "/" + lesson;
+        if (!course.equals("") && !chapter.equals("") && !lesson.equals("")){
+            String link = 
+                "/" + course 
+              + "/" + chapter 
+              + "/" + lesson;
             if (courseDataProvider.isLessonLink(link)) {
                 createVideoplayer(link);
             } else { create404Message(); }
@@ -122,6 +126,6 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
     }
 
     private boolean resolvesToThisView(String link){
-        return link.matches("^\\/.{1,}\\/.{1,}$");
+        return link.matches("^\\/.{1,}\\/.{1,}\\/.{1,}$");
     }
 }

@@ -10,7 +10,7 @@ import com.webforj.router.history.Location;
 public class IndexView extends Composite<Div>{
 
     public IndexView() {
-        Router.getCurrent().navigate(new Location("/chapter-0/lesson-1"));
+        Router.getCurrent().navigate(new Location("/webforj/chapter-0/what-is-webforj"));
     }
     
 }
