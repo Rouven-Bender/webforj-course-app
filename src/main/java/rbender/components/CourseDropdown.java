@@ -8,14 +8,14 @@ import com.webforj.component.html.elements.Paragraph;
 import com.webforj.component.html.elements.UnorderedList;
 import com.webforj.component.icons.FeatherIcon;
 
-import rbender.types.Chapter;
+import rbender.types.Course;
 
-public class ChapterDropdown extends Composite<UnorderedList>{
+public class CourseDropdown extends Composite<UnorderedList>{
     private UnorderedList self = getBoundComponent();
     private Button fold;
-    private boolean folded = false;
+    private boolean folded = true;
 
-    public ChapterDropdown(Chapter c){
+    public CourseDropdown(Course c) {
         self.setStyle("padding-left", "20px");
         self.setStyle("margin-top", "7px");
         self.setStyle("margin-bottom", "7px");
@@ -24,25 +24,25 @@ public class ChapterDropdown extends Composite<UnorderedList>{
         header.setStyle("display", "flex");
 
         Paragraph text = new Paragraph(c.name);
+        header.add(text);
 
         fold = new Button();
-        fold.setIcon(FeatherIcon.CHEVRON_DOWN.create());
+        fold.setIcon(FeatherIcon.CHEVRON_RIGHT.create());
         fold.setStyle("margin-left", "auto");
         fold.setStyle("padding-right", "15px");
         fold.addClassName("chapter-fold-btn");
-        fold.addClickListener(this::foldChapter);
+        fold.addClickListener(this::unfoldCourse);
         fold.setVisible(false);
-
-        header.add(text, fold);
+        header.add(fold);
 
         self.add(header);
     }
 
-    public void foldChapter(ButtonClickEvent event){
+    private void unfoldCourse(ButtonClickEvent event){
         self.getComponents().forEach(e -> {
             try {
-                ChapterDropdownItem item = (ChapterDropdownItem) e;
-                item.toggleVisibility();
+                ChapterDropdown item = (ChapterDropdown) e;
+                item.toggleVisible();
             } catch (ClassCastException ex) {} // because the first item is a div we don't care about that
         });
         if (folded) {
@@ -54,17 +54,11 @@ public class ChapterDropdown extends Composite<UnorderedList>{
         }
     }
 
-    public ChapterDropdown toggleVisible() {
-        self.setVisible(!self.isVisible());
-        return this;
-    }
-    public ChapterDropdown setVisible(boolean visible){
-        self.setVisible(visible);
-        return this;
-    }
-
-    public ChapterDropdown add(ChapterDropdownItem... items) {
+    public CourseDropdown add(ChapterDropdown... items){
         self.add(items);
+        for (ChapterDropdown i : items) {
+            i.setVisible(false);
+        }
         if (!fold.isVisible()) { fold.setVisible(true); }
         return this;
     }

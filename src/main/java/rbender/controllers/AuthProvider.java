@@ -41,7 +41,7 @@ public class AuthProvider {
         }
     }
 
-    public boolean validateJWTToken(String token, String username) {
+    private boolean validateJWTToken(String token, String username) {
         try {
             Jwts.parser()
             .requireIssuer(config.getConfig("issuer"))

@@ -38,6 +38,10 @@ public class CourseDataProvider {
         }
     }
 
+    public Optional<Course> getCourseByURL(String course){
+        return Optional.ofNullable(courseLookupByLink.get(course));
+    }
+
     public Optional<Chapter[]> getChapters(String course){
         Optional<Course> c = Optional.ofNullable(courseLookupByLink.get(course));
         if (c.isPresent()){
