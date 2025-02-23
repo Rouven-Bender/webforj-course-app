@@ -2,3 +2,4 @@ notes.txt
 .vscode/*
 target/*
 *.sqlite
+jwt-signing-secret

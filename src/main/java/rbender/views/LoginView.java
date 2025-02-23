@@ -11,6 +11,7 @@ import com.webforj.router.event.DidEnterEvent;
 import com.webforj.router.history.Location;
 import com.webforj.router.history.ParametersBag;
 import com.webforj.router.observer.DidEnterObserver;
+import com.webforj.webstorage.LocalStorage;
 
 import rbender.controllers.AuthProvider;
 
@@ -57,6 +58,7 @@ public class LoginView extends Composite<Div> implements DidEnterObserver{
         String pwd = e.getPassword();
 
         if (authProvider.validateLoginData(username, pwd)){
+            LocalStorage.getCurrent().add("username", username).add("token", authProvider.createJWTToken(username));
             if (dest != null) {
                 if (dest.kind == SendTo.INDEX) {
                     Router.getCurrent().navigate(new Location("/"));
