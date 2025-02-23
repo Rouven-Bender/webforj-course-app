@@ -30,6 +30,13 @@ public class AuthProvider {
         }
     }
 
+    public boolean isLogdin(){
+        LocalStorage ls = LocalStorage.getCurrent();
+        String username = ls.get("username");
+        String token = ls.get("token");
+        return validateJWTToken(token, username);
+    }
+
     public Optional<String> getLogdinUsername(){
         LocalStorage ls = LocalStorage.getCurrent();
         String username = ls.get("username");

@@ -12,6 +12,7 @@ import com.webforj.router.Router;
 import com.webforj.router.annotation.Route;
 import com.webforj.router.event.DidEnterEvent;
 import com.webforj.router.event.NavigateEvent;
+import com.webforj.router.history.Location;
 import com.webforj.router.history.ParametersBag;
 import com.webforj.router.observer.DidEnterObserver;
 
@@ -19,12 +20,14 @@ import rbender.Application;
 import rbender.components.NoteBox;
 import rbender.components.Transcript;
 import rbender.components.Video;
+import rbender.controllers.AuthProvider;
 import rbender.controllers.CourseDataProvider;
 
 @Route(value = "/:course/:chapter/:lesson", outlet = MainLayout.class)
 public class LessonView extends Composite<FlexLayout> implements DidEnterObserver{
     private FlexLayout self = getBoundComponent();
     private CourseDataProvider courseDataProvider = CourseDataProvider.getInstance();
+    private AuthProvider authProvider = AuthProvider.getInstance().get();
     private Div outerContainer = new Div();
     private Div videoTranscriptContainer = new Div();
 
@@ -34,6 +37,7 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
     private Transcript transcript;
 
     public LessonView(){
+        checkLoginStatusOrSendToLogin();
         self.add(outerContainer);
         self.setStyle("height", "100%");
         outerContainer.add(videoTranscriptContainer);
@@ -44,6 +48,12 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
         outerContainer.setStyle("gap", "5px");
 
         Router.getCurrent().onNavigate(this::onNavigate);
+    }
+
+    private void checkLoginStatusOrSendToLogin(){
+        if (!authProvider.isLogdin()){
+            Router.getCurrent().navigate(new Location("/login"));
+        }
     }
 
     private void createVideoplayer(String lessonLink){
@@ -79,6 +89,7 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
 
     @Override
     public void onDidEnter(DidEnterEvent event, ParametersBag params) {
+        checkLoginStatusOrSendToLogin();
         String course = params.get("course").orElse("");
         String chapter = params.get("chapter").orElse("");
         String lesson = params.get("lesson").orElse("");

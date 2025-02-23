@@ -21,6 +21,7 @@ import com.webforj.component.layout.applayout.AppLayout;
 import com.webforj.component.layout.toolbar.Toolbar;
 import com.webforj.router.Router;
 import com.webforj.router.annotation.Route;
+import com.webforj.router.event.NavigateEvent;
 import com.webforj.router.history.Location;
 
 @Route("/")
@@ -34,6 +35,15 @@ public class MainLayout extends Composite<AppLayout> {
     db = Database.getInstance().get(); //TODO: make a 500 Screen for server errors
     setHeader();
     setDrawer();
+    Router.getCurrent().onNavigate(this::checkLoginStatus);
+  }
+
+  private void checkLoginStatus(NavigateEvent event) {
+    if (!event.getLocation().getFullURI().matches("^/login")){
+      if (!authProvider.isLogdin()) {
+        Router.getCurrent().navigate(new Location("/login"));
+      }
+    }
   }
 
   private void setHeader() {
@@ -72,7 +82,6 @@ public class MainLayout extends Composite<AppLayout> {
         nav.add(new Paragraph("Your User has no Courses"));
       }
     } else {
-      Router.getCurrent().navigate(new Location("/login"));
     }
     self.addToDrawer(nav);
   }
