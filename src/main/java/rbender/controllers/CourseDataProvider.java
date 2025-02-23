@@ -17,7 +17,7 @@ public class CourseDataProvider {
 
     private CourseDataProvider(){
         try {
-        String content = Application.getResourceAsString("courseData/courses.json");
+        String content = Application.getResourceAsString("courseData/courses.json").orElse("");
         Gson gson = new Gson();
         Course[] courses = gson.fromJson(content, StorageFile.class).courses;
 

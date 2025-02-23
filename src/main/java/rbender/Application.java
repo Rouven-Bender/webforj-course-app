@@ -2,6 +2,7 @@ package rbender;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import com.webforj.App;
 import com.webforj.annotation.AppProfile;
@@ -18,18 +19,22 @@ import com.webforj.annotation.StyleSheet;
 public class Application extends App {
     private static ClassLoader classLoader = Application.class.getClassLoader();
     
-    public static byte[] getResourceFileAsByteArray(String filename) throws IOException{
+    public static Optional<byte[]> getResourceFileAsByteArray(String filename) throws IOException{
         if (filename.equals("")){
-            return new byte[]{};
+            return Optional.empty();
         }
-        return classLoader.getResourceAsStream(filename).readAllBytes();
+        return Optional.of(classLoader.getResourceAsStream(filename).readAllBytes());
     }
 
-    public static String getResourceAsString(String filename) throws IOException{
+    public static Optional<String> getResourceAsString(String filename) throws IOException{
         if (filename.equals("")){
-            return "";
+            return Optional.empty();
         }
-        byte[] data = getResourceFileAsByteArray(filename);
-        return new String(data, StandardCharsets.UTF_8);
+        Optional<byte[]> data = getResourceFileAsByteArray(filename);
+        if (data.isPresent()) {
+            return Optional.of(new String(data.get(), StandardCharsets.UTF_8));
+        } else {
+            return Optional.empty();
+        }
     }
 }

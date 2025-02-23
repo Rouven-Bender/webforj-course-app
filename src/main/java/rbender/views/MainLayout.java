@@ -4,6 +4,7 @@ import rbender.components.ChapterDropdown;
 import rbender.components.ChapterDropdownItem;
 import rbender.components.DrawerHeader;
 import rbender.controllers.CourseDataProvider;
+import rbender.controllers.Database;
 import rbender.types.Chapter;
 import rbender.types.Lesson;
 
@@ -17,9 +18,11 @@ import com.webforj.router.annotation.Route;
 @Route("/")
 public class MainLayout extends Composite<AppLayout> {
   private CourseDataProvider courseDataProvider = CourseDataProvider.getInstance();
+  private Database db;
   private AppLayout self = getBoundComponent();
 
   public MainLayout() {
+    db = Database.getInstance().get(); //TODO: make a 500 Screen for server errors
     setHeader();
     setDrawer();
   }

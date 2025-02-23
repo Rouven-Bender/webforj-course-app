@@ -5,10 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Optional;
 
-
-import rbender.types.User;
+import rbender.types.*;
 
 public class Database {
     private static Database instance = null;
@@ -50,6 +50,28 @@ public class Database {
             }
             return Optional.empty();
         } catch (SQLException e){
+            return Optional.empty();
+        }
+    }
+
+    public Optional<ArrayList<String>> getCoursesUrlsOfUser(String username){
+        try {
+            PreparedStatement stmt = con.prepareStatement("select * from whichCoursesHasUser where username=?");
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            ArrayList<String> out = new ArrayList<String>();
+            int length = 0;
+            while(rs.next()){
+               out.add(rs.getString("cname"));
+               length++;
+            }
+            if (length != 0){
+                return Optional.of(out);
+            } else {
+                return Optional.empty();
+            }
+        } catch (SQLException e){
+            //TODO: Logging
             return Optional.empty();
         }
     }

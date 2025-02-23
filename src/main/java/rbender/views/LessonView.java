@@ -52,7 +52,7 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
         vidPlayer = new Video(videolink);
         videoTranscriptContainer.add(vidPlayer);
         try {
-            String markdown = Application.getResourceAsString(courseDataProvider.getTranscript(lessonLink));
+            String markdown = Application.getResourceAsString(courseDataProvider.getTranscript(lessonLink)).orElse("");
             transcript = new Transcript(markdown);
         } catch (IOException e) {}
         videoTranscriptContainer.add(transcript);
@@ -103,7 +103,7 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
                     vidPlayer.resetWithNewSource(courseDataProvider.getVideoLink(link));
                     vidPlayer.setVisible(true);
                     try {
-                        transcript.setText(Application.getResourceAsString(courseDataProvider.getTranscript(link)));
+                        transcript.setText(Application.getResourceAsString(courseDataProvider.getTranscript(link)).orElse(""));
                         transcript.setVisible(true);
                     } catch (IOException e) { }
                 } else {
