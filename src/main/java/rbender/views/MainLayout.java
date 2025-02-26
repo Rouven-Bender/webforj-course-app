@@ -1,5 +1,23 @@
 package rbender.views;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
+import com.webforj.component.Composite;
+import com.webforj.component.element.event.ElementClickEvent;
+import com.webforj.component.html.elements.Nav;
+import com.webforj.component.html.elements.Paragraph;
+import com.webforj.component.icons.FeatherIcon;
+import com.webforj.component.icons.Icon;
+import com.webforj.component.icons.IconButton;
+import com.webforj.component.layout.applayout.AppDrawerToggle;
+import com.webforj.component.layout.applayout.AppLayout;
+import com.webforj.component.layout.flexlayout.FlexLayout;
+import com.webforj.router.Router;
+import com.webforj.router.annotation.Route;
+import com.webforj.router.event.NavigateEvent;
+import com.webforj.router.history.Location;
+
 import rbender.components.ChapterDropdown;
 import rbender.components.ChapterDropdownItem;
 import rbender.components.CourseDropdown;
@@ -9,20 +27,6 @@ import rbender.controllers.CourseDataProvider;
 import rbender.controllers.Database;
 import rbender.types.Chapter;
 import rbender.types.Lesson;
-
-import java.util.ArrayList;
-import java.util.Optional;
-
-import com.webforj.component.Composite;
-import com.webforj.component.html.elements.Nav;
-import com.webforj.component.html.elements.Paragraph;
-import com.webforj.component.layout.applayout.AppDrawerToggle;
-import com.webforj.component.layout.applayout.AppLayout;
-import com.webforj.component.layout.toolbar.Toolbar;
-import com.webforj.router.Router;
-import com.webforj.router.annotation.Route;
-import com.webforj.router.event.NavigateEvent;
-import com.webforj.router.history.Location;
 
 @Route("/")
 public class MainLayout extends Composite<AppLayout> {
@@ -46,13 +50,27 @@ public class MainLayout extends Composite<AppLayout> {
     }
   }
 
+  private void sendToAccountsPage(ElementClickEvent<Icon> event) {
+    Router.getCurrent().navigate(new Location("/account"));
+  }
+
   private void setHeader() {
     self.setDrawerHeaderVisible(true);
 
     self.addToDrawerTitle(new DrawerHeader());
 
-    Toolbar toolbar = new Toolbar();
-    toolbar.addToStart(new AppDrawerToggle());
+    FlexLayout toolbar = new FlexLayout();
+    toolbar.setStyle("padding", "8px");
+
+
+    AppDrawerToggle toggle = new AppDrawerToggle();
+    IconButton acc = new IconButton(FeatherIcon.USER.create());
+    acc.setStyle("color", "var(--dwc-color-body-text)");
+    acc.setStyle("margin-left", "auto");
+    acc.onClick(this::sendToAccountsPage);
+
+    toolbar.add(toggle, acc);
+
     self.addToHeader(toolbar);
   }
 
