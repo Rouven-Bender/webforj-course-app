@@ -41,6 +41,7 @@ public class LoginView extends Composite<Div> {
         if (authProvider.validateLoginData(username, pwd)){
             LocalStorage.getCurrent().add("username", username).add("token", authProvider.createJWTToken(username));
             Router.getCurrent().navigate(new Location("/"));
+            loginDialog.close();
         } else {
             loginDialog.setError(true);
             loginDialog.setEnabled(true);
