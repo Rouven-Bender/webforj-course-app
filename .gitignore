@@ -3,3 +3,4 @@ notes.txt
 target/*
 *.sqlite
 jwt-signing-secret
+todo
