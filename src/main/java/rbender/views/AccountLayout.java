@@ -15,7 +15,7 @@ import com.webforj.router.history.Location;
 import rbender.components.ChapterDropdownItem;
 import rbender.controllers.AuthProvider;
 
-@Route("/account")
+@Route(value = "account", priority = 2)
 public class AccountLayout extends Composite<AppLayout> {
     private AppLayout self = getBoundComponent();
     private AuthProvider auth = null;
