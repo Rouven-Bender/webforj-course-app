@@ -17,9 +17,9 @@ public class DrawerHeader extends Composite<FlexLayout> {
     title.setStyle("margin-bottom", "0");
     self.add(title);
 
-    Paragraph email = new Paragraph("#builtwithwebforj");
-    email.setStyle("color", "#86888f");
-    email.setStyle("font-size", ".7em");
-    self.add(email);
+    Paragraph subtitle = new Paragraph("#builtwithwebforj");
+    subtitle.setStyle("color", "#86888f");
+    subtitle.setStyle("font-size", ".7em");
+    self.add(subtitle);
   }
 }
