@@ -75,4 +75,42 @@ public class Database {
             return Optional.empty();
         }
     }
+
+    public Optional<String> getCourseForCode(String code) {
+        try {
+            PreparedStatement stmt = con.prepareStatement("select * from redeemCodes where code=?");
+            stmt.setString(1, code);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                String course = rs.getString("cname");
+                return Optional.of(course);
+            }
+        } catch (SQLException e) {
+            return Optional.empty();
+        }
+        return Optional.empty();
+    }
+
+    public boolean removeUsedActivationCode(String code){
+        try {
+            PreparedStatement stmt = con.prepareStatement("delete from redeemCodes where code=?");
+            stmt.setString(1, code);
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean registerCourseForUser(String course, String username) {
+        try {
+            PreparedStatement stmt = con.prepareStatement("insert into whichCoursesHasUser(username, cname) values (?,?)");
+            stmt.setString(1, username);
+            stmt.setString(2, course);
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
 }

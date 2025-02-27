@@ -4,15 +4,21 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.webforj.component.Composite;
-import com.webforj.component.element.event.ElementClickEvent;
+import com.webforj.component.Theme;
+import com.webforj.component.button.ButtonTheme;
+import com.webforj.component.drawer.Drawer;
+import com.webforj.component.drawer.Drawer.Placement;
+import com.webforj.component.html.elements.ListEntry;
 import com.webforj.component.html.elements.Nav;
 import com.webforj.component.html.elements.Paragraph;
+import com.webforj.component.html.elements.UnorderedList;
 import com.webforj.component.icons.FeatherIcon;
-import com.webforj.component.icons.Icon;
 import com.webforj.component.icons.IconButton;
 import com.webforj.component.layout.applayout.AppDrawerToggle;
 import com.webforj.component.layout.applayout.AppLayout;
 import com.webforj.component.layout.flexlayout.FlexLayout;
+import com.webforj.component.optiondialog.InputDialog;
+import com.webforj.component.toast.Toast;
 import com.webforj.router.Router;
 import com.webforj.router.annotation.Route;
 import com.webforj.router.event.NavigateEvent;
@@ -34,12 +40,39 @@ public class MainLayout extends Composite<AppLayout> {
   private AuthProvider authProvider = AuthProvider.getInstance().get();
   private Database db;
   private AppLayout self = getBoundComponent();
+  private Nav courseNav;
+  private Drawer accDrawer;
+  private InputDialog redeemDialog;
 
   public MainLayout() {
     db = Database.getInstance().get(); //TODO: make a 500 Screen for server errors
+    setupDialogs();
     setHeader();
     setDrawer();
+    setAccountDrawer();
     Router.getCurrent().onNavigate(this::checkLoginStatus);
+  }
+
+  private void setAccountDrawer(){
+    accDrawer = new Drawer();
+    accDrawer.setPlacement(Placement.RIGHT);
+    accDrawer.setLabel("Account");
+
+    ListEntry redeem = new ListEntry("Redeem Code");
+    redeem.setStyle("cursor", "pointer");
+    redeem.onClick((e) -> {
+      String code = redeemDialog.open(); 
+      if (authProvider.checkRedeemAndRegister(code)) {
+        Toast.show("course was successfully activated", Theme.SUCCESS);
+      } else {
+        Toast.show("the course code was either invalid or an error accrued", Theme.DANGER);
+      }
+      setDrawer();
+    });
+    accDrawer.add(new UnorderedList(
+      redeem
+    ));
+    self.add(accDrawer);
   }
 
   private void checkLoginStatus(NavigateEvent event) {
@@ -50,10 +83,6 @@ public class MainLayout extends Composite<AppLayout> {
     }
   }
 
-  private void sendToAccountsPage(ElementClickEvent<Icon> event) {
-    Router.getCurrent().navigate(new Location("/account"));
-  }
-
   private void setHeader() {
     self.setDrawerHeaderVisible(true);
 
@@ -62,12 +91,17 @@ public class MainLayout extends Composite<AppLayout> {
     FlexLayout toolbar = new FlexLayout();
     toolbar.setStyle("padding", "8px");
 
-
     AppDrawerToggle toggle = new AppDrawerToggle();
     IconButton acc = new IconButton(FeatherIcon.USER.create());
     acc.setStyle("color", "var(--dwc-color-body-text)");
     acc.setStyle("margin-left", "auto");
-    acc.onClick(this::sendToAccountsPage);
+    acc.onClick((e) -> { 
+      if (accDrawer.isOpened()) {
+        accDrawer.close();
+      } else {
+        accDrawer.open();
+      }
+    });
 
     toolbar.add(toggle, acc);
 
@@ -75,7 +109,10 @@ public class MainLayout extends Composite<AppLayout> {
   }
 
   private void setDrawer() {
-    Nav nav = new Nav();
+    if (courseNav != null) {
+      self.remove(courseNav);
+    }
+    courseNav = new Nav();
 
     Optional<String> username = authProvider.getLogdinUsername();
     if (username.isPresent()){
@@ -94,13 +131,25 @@ public class MainLayout extends Composite<AppLayout> {
             }
             cd.add(d);
           }
-          nav.add(cd);
+          courseNav.add(cd);
         });
       } else {
-        nav.add(new Paragraph("Your User has no Courses"));
+        courseNav.add(new Paragraph("Your User has no Courses"));
       }
-    } else {
     }
-    self.addToDrawer(nav);
+
+    self.addToDrawer(courseNav);
+  }
+  
+  private void setupDialogs() {
+    redeemDialog = new InputDialog(
+      "Redeem your Course using a license key",
+      "Redeem Course with Code",
+      InputDialog.InputType.TEXT
+    );
+    redeemDialog.setBlurred(true);
+    redeemDialog.setButtonText(InputDialog.Button.FIRST, "Redeem");
+    redeemDialog.setFirstButtonTheme(ButtonTheme.PRIMARY);
+    redeemDialog.setButtonText(InputDialog.Button.SECOND, "Cancel");
   }
 }

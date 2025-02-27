@@ -61,6 +61,16 @@ public class AuthProvider {
         }
     }
 
+    public boolean checkRedeemAndRegister(String code) {
+        Optional<String> coursename = database.getCourseForCode(code);
+        Optional<String> username = getLogdinUsername();
+        if (coursename.isPresent() && username.isPresent()) {
+            return (database.registerCourseForUser(coursename.get(), username.get()) && database.removeUsedActivationCode(code));
+        } else {
+            return false;
+        }
+    }
+
     public String createJWTToken(String username){
         return Jwts.builder()
             .subject(username)

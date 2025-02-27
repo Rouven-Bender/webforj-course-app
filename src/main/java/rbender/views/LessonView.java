@@ -23,7 +23,7 @@ import rbender.components.Video;
 import rbender.controllers.AuthProvider;
 import rbender.controllers.CourseDataProvider;
 
-@Route(value = "/:course/:chapter/:lesson", outlet = MainLayout.class)
+@Route(value = ":course/:chapter/:lesson", outlet = MainLayout.class)
 public class LessonView extends Composite<FlexLayout> implements DidEnterObserver{
     private FlexLayout self = getBoundComponent();
     private CourseDataProvider courseDataProvider = CourseDataProvider.getInstance();

@@ -12,7 +12,7 @@ import com.webforj.webstorage.LocalStorage;
 
 import rbender.controllers.AuthProvider;
 
-@Route("/login")
+@Route("login")
 public class LoginView extends Composite<Div> {
     private Div self = getBoundComponent();
     private Login loginDialog;

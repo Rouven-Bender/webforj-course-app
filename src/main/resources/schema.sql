@@ -12,3 +12,8 @@ create table whichCoursesHasUser(
 create table courses(
     cname text not null primary key
 );
+
+create table redeemCodes(
+    code text not null primary key,
+    cname text not null
+)
