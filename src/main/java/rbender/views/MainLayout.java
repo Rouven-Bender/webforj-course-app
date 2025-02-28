@@ -62,13 +62,14 @@ public class MainLayout extends Composite<AppLayout> {
     redeem.setStyle("cursor", "pointer");
     redeem.onClick((e) -> {
       String code = redeemDialog.open(); 
+      if (code != null) {
       if (authProvider.checkRedeemAndRegister(code)) {
         Toast.show("course was successfully activated", Theme.SUCCESS);
       } else {
         Toast.show("the course code was either invalid or an error accrued", Theme.DANGER);
       }
       setDrawer();
-    });
+    }});
     accDrawer.add(new UnorderedList(
       redeem
     ));
