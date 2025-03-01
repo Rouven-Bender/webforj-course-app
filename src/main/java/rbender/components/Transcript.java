@@ -13,7 +13,6 @@ public class Transcript extends Composite<Div>{
         transcript.setText(text);
         transcript.setReadOnly(true);
         transcript.setVerticalScroll(true);
-        transcript.addClassName("Transcript");
         transcript.addClassName("fill-available");
 
         self.setStyle("height", "100%");

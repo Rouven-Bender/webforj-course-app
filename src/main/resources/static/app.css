@@ -29,9 +29,6 @@ dwc-app-layout::part(content) {
   flex-direction: column;
   gap: 5px;
 }
-.Notes { grid-area: Notes; }
-.Transcript { grid-area: Transcript; }
-
 @supports (width: -webkit-fill-available) {
   .fill-available{
     width: -webkit-fill-available;
