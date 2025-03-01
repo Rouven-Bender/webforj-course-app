@@ -9,6 +9,9 @@ dwc-app-layout {
   --dwc-app-layout-header-height: 60px;
   --dwc-app-layout-drawer-width: 20em;
 }
+dwc-app-layout::part(content) {
+  overflow: hidden;
+}
 .chapter-fold-btn{
   border: 0px none transparent;
   outline: 0px none transparent;
