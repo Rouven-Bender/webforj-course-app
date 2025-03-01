@@ -1,53 +1,44 @@
 package rbender.views;
 
-import java.io.IOException;
+import java.util.Optional;
 
 import com.webforj.component.Composite;
-import com.webforj.component.html.elements.Div;
-import com.webforj.component.html.elements.H1;
-import com.webforj.component.html.elements.Paragraph;
-import com.webforj.component.layout.flexlayout.FlexContentAlignment;
 import com.webforj.component.layout.flexlayout.FlexLayout;
+import com.webforj.dispatcher.ListenerRegistration;
 import com.webforj.router.Router;
 import com.webforj.router.annotation.Route;
 import com.webforj.router.event.DidEnterEvent;
+import com.webforj.router.event.DidLeaveEvent;
 import com.webforj.router.event.NavigateEvent;
 import com.webforj.router.history.Location;
 import com.webforj.router.history.ParametersBag;
 import com.webforj.router.observer.DidEnterObserver;
+import com.webforj.router.observer.DidLeaveObserver;
 
-import rbender.Application;
-import rbender.components.NoteBox;
-import rbender.components.Transcript;
-import rbender.components.Video;
+import rbender.components.LessonContent;
+import rbender.components.dontHaveCourse;
+import rbender.components.notFound;
 import rbender.controllers.AuthProvider;
 import rbender.controllers.CourseDataProvider;
+import rbender.types.Course;
 
 @Route(value = ":course/:chapter/:lesson", outlet = MainLayout.class)
-public class LessonView extends Composite<FlexLayout> implements DidEnterObserver{
+public class LessonView extends Composite<FlexLayout> implements DidEnterObserver, DidLeaveObserver{
     private FlexLayout self = getBoundComponent();
     private CourseDataProvider courseDataProvider = CourseDataProvider.getInstance();
     private AuthProvider authProvider = AuthProvider.getInstance().get();
-    private Div outerContainer = new Div();
-    private Div videoTranscriptContainer = new Div();
 
-    private FlexLayout fourOfourContainer;
+    private ListenerRegistration<NavigateEvent> r;
 
-    private Video vidPlayer;
-    private Transcript transcript;
+    private notFound f404Element;
+    private dontHaveCourse dhCourse;
+    private LessonContent lContent;
+
 
     public LessonView(){
         checkLoginStatusOrSendToLogin();
-        self.add(outerContainer);
         self.setStyle("height", "100%");
-        outerContainer.add(videoTranscriptContainer);
-        outerContainer.setStyle("display", "flex");
-        outerContainer.setStyle("flex-direction", "row");
-        outerContainer.addClassName("fill-available");
-        outerContainer.setStyle("height", "100%");
-        outerContainer.setStyle("gap", "5px");
-
-        Router.getCurrent().onNavigate(this::onNavigate);
+        r = Router.getCurrent().onNavigate(this::onNavigate);
     }
 
     private void checkLoginStatusOrSendToLogin(){
@@ -56,87 +47,95 @@ public class LessonView extends Composite<FlexLayout> implements DidEnterObserve
         }
     }
 
-    private void createVideoplayer(String lessonLink){
-        String videolink = courseDataProvider.getVideoLink(lessonLink);
-        videoTranscriptContainer.addClassName("container");
-        vidPlayer = new Video(videolink);
-        videoTranscriptContainer.add(vidPlayer);
-        try {
-            String markdown = Application.getResourceAsString(courseDataProvider.getTranscript(lessonLink)).orElse("");
-            transcript = new Transcript(markdown);
-        } catch (IOException e) {}
-        videoTranscriptContainer.add(transcript);
-        outerContainer.add(new NoteBox());
-    }
-    
-    private void create404Message(){
-        fourOfourContainer = new FlexLayout();
-        fourOfourContainer.setAlignContent(FlexContentAlignment.CENTER);
-        fourOfourContainer.setStyle("flex-direction", "column");
-        fourOfourContainer.setStyle("flex-wrap", "nowrap"); // setFlow with column_nowrap became row_nowrap for some reason
-        fourOfourContainer.setStyle("margin", "auto");
-        H1 fourOfour = new H1("404");
-        fourOfour.setStyle("margin", "auto");
-        fourOfour.setStyle("color", "var(--dwc-color-primary-text)");
-        fourOfour.setStyle("font-size", "80px");
-        Paragraph text = new Paragraph("We don't have the Knowleadge you are looking for");
-        text.setStyle("font-size", "18px");
-        text.setStyle("margin", "auto");
-
-        fourOfourContainer.add(fourOfour,text);
-        outerContainer.add(fourOfourContainer);
+    private boolean checkUserOwningTheCourse(String courseUrl){
+        Optional<String> username = authProvider.getLogdinUsername();
+        if (username.isPresent()) {
+            return authProvider.userHasCourse(username.get(), courseUrl);
+        }
+        return false;
     }
 
     @Override
     public void onDidEnter(DidEnterEvent event, ParametersBag params) {
         checkLoginStatusOrSendToLogin();
-        String course = params.get("course").orElse("");
-        String chapter = params.get("chapter").orElse("");
-        String lesson = params.get("lesson").orElse("");
+        Optional<Location> l = Router.getCurrent().getResolvedLocation();
+        if (l.isPresent()) {
+            decideHowToRender(l.get().getFullURI());
+        }
+    }
 
-        if (!course.equals("") && !chapter.equals("") && !lesson.equals("")){
-            String link = 
-                "/" + course 
-              + "/" + chapter 
-              + "/" + lesson;
-            if (courseDataProvider.isLessonLink(link)) {
-                createVideoplayer(link);
-            } else { create404Message(); }
-        } else { create404Message(); }
+    @Override
+    public void onDidLeave(DidLeaveEvent event, ParametersBag params){
+        r.remove();
+    }
+
+    private void decideHowToRender(String url){
+        Optional<String> cn = getCourseNameFromURL(url);
+        if (cn.isPresent()) {
+            Optional<Course> course = courseDataProvider.getCourseByURL(cn.get());
+            if (course.isPresent()) {
+                if (checkUserOwningTheCourse(course.get().url)){
+                    if (courseDataProvider.isLessonLink(url)) {
+                        //Course exists, User owns course and the lesson exists
+                        lContent = new LessonContent(url);
+                        self.add(lContent);
+                    } else {
+                        //Course exists, User owns course but lesson doesn't exist
+                        f404Element = new notFound();
+                        self.add(f404Element);
+                    }
+                } else {
+                    //course exists but user doesn't own it
+                    dhCourse = new dontHaveCourse();
+                    self.add(dhCourse);
+                }
+            } else {
+                // course doesn't exist
+                f404Element = new notFound();
+                self.add(f404Element);
+            }
+        } else {
+            // course name could not be extracted from url
+            f404Element = new notFound();
+            self.add(f404Element);
+        }
+    }
+    
+    private void resetViewToDefault(){
+        if (f404Element != null){
+            self.remove(f404Element);
+            f404Element = null;
+        }
+        if (dhCourse != null){
+            self.remove(dhCourse);
+            dhCourse = null;
+        }
+        if (lContent != null){
+            self.remove(lContent);
+            lContent = null;
+        }
     }
 
     private void onNavigate(NavigateEvent ev) {
         String link = ev.getLocation().getFullURI();
+        //unload the view
+        resetViewToDefault();
+        //check if we reenter the same view because that doesn't trigger an onDidEnter
         if (resolvesToThisView(link)){
-            if (courseDataProvider.isLessonLink(link)){
-                if(vidPlayer != null){
-                    if (fourOfourContainer != null){ fourOfourContainer.setVisible(false);}
-                    vidPlayer.resetWithNewSource(courseDataProvider.getVideoLink(link));
-                    vidPlayer.setVisible(true);
-                    try {
-                        transcript.setText(Application.getResourceAsString(courseDataProvider.getTranscript(link)).orElse(""));
-                        transcript.setVisible(true);
-                    } catch (IOException e) { }
-                } else {
-                    if (fourOfourContainer != null){ fourOfourContainer.setVisible(false);}
-                    createVideoplayer(link);
-                }
-            } else {
-                if (fourOfourContainer != null){
-                    if (vidPlayer != null){ vidPlayer.pause(); vidPlayer.setVisible(false); }
-                    if (transcript != null) { transcript.setVisible(false); }
-                    fourOfourContainer.setVisible(true);
-                } else {
-                    if (vidPlayer != null){ vidPlayer.pause(); vidPlayer.setVisible(false); }
-                    if (transcript != null) { transcript.setVisible(false); }
-                    create404Message();
-                    fourOfourContainer.setVisible(true);
-                }
-            }
+            decideHowToRender(link);
         }
     }
 
-    private boolean resolvesToThisView(String link){
+    private boolean resolvesToThisView(String link) {
         return link.matches("^\\/.{1,}\\/.{1,}\\/.{1,}$");
+    }
+
+    private Optional<String> getCourseNameFromURL(String link) {
+        String[] dirs = link.split("/");
+        if (dirs.length < 2) {
+            return Optional.empty();
+        } else {
+            return Optional.of(dirs[1]);
+        }
     }
 }

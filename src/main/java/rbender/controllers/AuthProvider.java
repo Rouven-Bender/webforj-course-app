@@ -1,6 +1,7 @@
 package rbender.controllers;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import com.webforj.webstorage.LocalStorage;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import rbender.Application;
+import rbender.types.Course;
 import rbender.types.User;
 
 public class AuthProvider {
@@ -69,6 +71,19 @@ public class AuthProvider {
         } else {
             return false;
         }
+    }
+
+    public boolean userHasCourse(String username, String courseURL){
+        Optional<Course> cs = CourseDataProvider.getInstance().getCourseByURL(courseURL);
+        Optional<ArrayList<String>> cu = database.getCoursesUrlsOfUser(username);
+        if (cs.isPresent() && cu.isPresent()){
+            for (String c : cu.get()){
+                if (cs.get().url.equals(c)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public String createJWTToken(String username){
