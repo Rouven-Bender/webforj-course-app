@@ -50,6 +50,11 @@ public class AuthProvider {
         }
     }
 
+    public void logoutUser(){
+        LocalStorage ls = LocalStorage.getCurrent();
+        ls.remove("username", "token");
+    }
+
     private boolean validateJWTToken(String token, String username) {
         try {
             Jwts.parser()

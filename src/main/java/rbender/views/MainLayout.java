@@ -70,9 +70,21 @@ public class MainLayout extends Composite<AppLayout> {
       }
       setDrawer();
     }});
+    
+    ListEntry logout = new ListEntry("Logout");
+    logout.setStyle("cursor", "pointer");
+    logout.onClick((e) -> {
+      authProvider.logoutUser();
+      Router.getCurrent().navigate(new Location("/login"));
+    });
+
     accDrawer.add(new UnorderedList(
-      redeem
-    ));
+      redeem,
+      logout
+    ).setStyle("display", "flex")
+    .setStyle("flex-direction", "column")
+    .setStyle("gap", "15px")
+    );
     self.add(accDrawer);
   }
 
