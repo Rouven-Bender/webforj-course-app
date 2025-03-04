@@ -91,6 +91,14 @@ public class AuthProvider {
         return false;
     }
 
+    public boolean registerNewUser(String username, String password) {
+        if(database.isUsernameFree(username)){
+            String pwdHash = Password.hash(password).withArgon2().getResult();
+            return database.addNewUser(username, pwdHash);
+        }
+        return false;
+    }
+
     public String createJWTToken(String username){
         return Jwts.builder()
             .subject(username)

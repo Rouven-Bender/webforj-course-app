@@ -102,6 +102,33 @@ public class Database {
         }
     }
 
+    public boolean isUsernameFree(String username) {
+        try {
+            PreparedStatement stmt = con.prepareStatement("select username from users where username = ?");
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                String u = rs.getString("username");
+                return !u.equals(username);
+            }
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean addNewUser(String username, String pwdHash){
+        try {
+            PreparedStatement stmt = con.prepareStatement("insert into users(username, pwdhash) values (?, ?)");
+            stmt.setString(1, username);
+            stmt.setString(2, pwdHash);
+            stmt.execute();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean registerCourseForUser(String course, String username) {
         try {
             PreparedStatement stmt = con.prepareStatement("insert into whichCoursesHasUser(username, cname) values (?,?)");

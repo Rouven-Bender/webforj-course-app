@@ -24,6 +24,13 @@ dwc-app-layout::part(content) {
   outline: 0px none transparent;
 }
 
+.registrationDialog::part(rememberme-input){
+  display: none;
+}
+.registrationDialog::part(buttons){
+  margin-left: auto;
+}
+
 .container {
   display: flex;
   flex-direction: column;
