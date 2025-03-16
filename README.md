@@ -10,9 +10,9 @@ A Course Application written with [webforj](https://webforj.com) for the builtwi
 ### Files
 These files need to be created for the programm to work
 - .../src/main/resources/jwt-signing-secret
-in this file you should write a long random string for JWT Token Signing
+> in this file you should write a long random string for JWT Token Signing
 - .../db.sqlite
-create this file with
+> create this file with
 ```bash
 #your current folder is .../course-app
 sqlite3 db.sqlite
