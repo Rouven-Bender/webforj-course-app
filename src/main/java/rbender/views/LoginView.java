@@ -1,6 +1,7 @@
 package rbender.views;
 
 import com.webforj.component.Composite;
+import com.webforj.component.html.elements.Anchor;
 import com.webforj.component.html.elements.Div;
 import com.webforj.component.html.elements.Paragraph;
 import com.webforj.component.login.Login;
@@ -24,6 +25,7 @@ public class LoginView extends Composite<Div> {
                 authProvider = e;
 
                 loginDialog = new Login();
+                loginDialog.addToAfterForm(new Anchor("/register","Don't have a login? Register here"));
                 self.add(loginDialog);
                 loginDialog.open();
                 loginDialog.onSubmit(this::onSubmit);
