@@ -1,31 +1,20 @@
 {
     "courses": [
         {
-            "name": "WebforJ",
-            "url": "webforj",
+            "name": "Example Course Name",
+            "url": "lorem_ipsum",
             "chapters": [
                 {
                     "name": "Chapter 0: Introduction",
                     "url": "chapter-0",
                     "lessons": [
                         {
-                            "name": "What is WebforJ",
+                            "name": "Lorem",
                             "video": "",
-                            "transcript": "courseData/what-is-webforj.md",
-                            "url": "what-is-webforj"
-                        },
-                        {
-                            "name": "What is a Frontend",
-                            "video": "",
-                            "transcript": "",
-                            "url": "what-is-a-frontend"
+                            "transcript": "courseData/lorem/ipsum.md",
+                            "url": "ipsum"
                         }
                     ]
-                },
-                {
-                    "name": "Chapter 1: Setup",
-                    "url": "chapter-1",
-                    "lessons": []
                 }
             ]
         }
