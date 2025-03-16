@@ -29,7 +29,7 @@ Then write the Transcript files, one for each lesson, with Markdown. These will 
 For videos the recommended approach is to encode the file as an mp4 with the "web-optimized" checkbox in "Handbrake" set
 ![Screenshot of the checkbox](/docs/Screenshot%202025-03-08%20200201.png). This will store the information about
 the video at the front which will enable the video to be streamed with the html5 video tag using the browsers builtin hls implementation.
-Storing the video on the Backend with the frontend is not recommended as storing it in the resources folder will baloon your .jar file sizes and compile/bundle sizes
+Storing the video on the Backend with the frontend is not recommended as storing it in the resources folder will baloon your .jar file sizes and compile/bundle sizes. Instead putting the video in a block storage like s3 and using the link to that file as the value of the video field in the courses.json allows the client to stream the video from a seperate server keeping the bandwidth available on the frontend server
 
 ## Starting the service
 ```bash
